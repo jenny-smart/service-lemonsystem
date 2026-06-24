@@ -81,14 +81,14 @@ st.markdown("""
   <div class="hero-emoji">🍋</div>
   <div>
     <div class="hero-title">檸檬營運自動化工具</div>
-    <div class="hero-sub">客服・排班・財務・服務異動・評估・快速訂單</div>
+    <div class="hero-sub">評估・通知・財務・訂單・服務異動・排班</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="info-strip"><b>目前階段</b><ul>
-<li>所有功能放在同一層選單。</li>
+<li>功能選單依照日常使用順序排列。</li>
 <li>只修改 service-lemonsystem。</li>
 <li>memo-system 與 orders-system 保持不動。</li>
 </ul></div>
@@ -98,58 +98,50 @@ step("1", "選擇功能")
 feature = st.selectbox(
     "功能",
     [
-        "📋 客服作業",
-        "📅 排班管理",
-        "💰 財務對帳",
-        "🔄 服務異動",
         "📐 評估文字工具",
-        "新客資料拆解",
-        "舊客快速建單",
-        "LINE 通知產生器",
+        "LINE通知產生器",
+        "💰 財務對帳",
+        "📋 訂單備註",
         "訂單轉換",
         "儲值金補價差",
+        "🔄 服務異動",
+        "📅 排班管理",
+        "新客資料拆解",
+        "舊客快速建單",
     ],
     label_visibility="collapsed",
 )
 
 st.markdown("---")
 
-if feature == "📋 客服作業":
-    render_memo_placeholder("📋 客服作業", "舊客回購備註回填、新成單提醒建立、客服備忘錄整理。")
-
-elif feature == "📅 排班管理":
-    render_memo_placeholder("📅 排班管理", "排班匯入、檸檬人空檔查詢、清空排班。")
-
-elif feature == "💰 財務對帳":
-    render_memo_placeholder("💰 財務對帳", "待付款清單查詢、ATM 配對、系統對帳更新。")
-
-elif feature == "🔄 服務異動":
-    render_memo_placeholder("🔄 服務異動", "車馬費、異動費、加減時、退款與後台同步。")
-
-elif feature == "📐 評估文字工具":
+if feature == "📐 評估文字工具":
     render_memo_placeholder("📐 評估文字工具", "貼入評估內容，自動產生兩版客服文字與金額計算。")
 
-elif feature == "舊客快速建單":
-    step("2", "舊客快速建單")
-    name = st.text_input("客戶姓名", placeholder="例如：王小明")
-    phone = st.text_input("電話", placeholder="例如：0912345678")
-    address = st.text_input("地址", placeholder="請輸入服務地址")
-    if st.button("建立舊客快速建單資料", use_container_width=True):
-        st.success(old_customer_quick_order.run(name or phone or address or "未輸入"))
-
-elif feature == "新客資料拆解":
-    step("2", "新客資料拆解")
-    raw_text = st.text_area("貼上新客資料", height=220, placeholder="貼上 LINE / 表單 / 訂單文字")
-    if st.button("拆解資料", use_container_width=True):
-        st.json(new_customer_parser.parse(raw_text))
-
-elif feature == "LINE 通知產生器":
-    step("2", "LINE 通知產生器")
+elif feature == "LINE通知產生器":
+    step("2", "LINE通知產生器")
     order_no = st.text_input("訂單編號", placeholder="例如：LC002115751")
     customer = st.text_input("客戶名稱")
     if st.button("產生 LINE 通知", use_container_width=True):
         msg = line_notice_generator.generate({"order_no": order_no, "customer": customer})
         st.text_area("LINE 通知內容", value=msg, height=220)
+
+elif feature == "💰 財務對帳":
+    step("2", "💰 財務對帳")
+    finance_feature = st.radio(
+        "財務子功能",
+        ["待付款", "ATM配對", "對帳更新"],
+        horizontal=True,
+        label_visibility="collapsed",
+    )
+    if finance_feature == "待付款":
+        render_memo_placeholder("💰 待付款", "查詢待付款訂單與待處理付款清單。")
+    elif finance_feature == "ATM配對":
+        render_memo_placeholder("💰 ATM配對", "匯入或貼上銀行明細，與後台待付款訂單進行配對。")
+    else:
+        render_memo_placeholder("💰 對帳更新", "確認配對結果後，更新後台對帳狀態與相關紀錄。")
+
+elif feature == "📋 訂單備註":
+    render_memo_placeholder("📋 訂單備註", "新成單提醒、備註整理、舊客回購備註回填。")
 
 elif feature == "訂單轉換":
     step("2", "訂單轉換")
@@ -158,13 +150,33 @@ elif feature == "訂單轉換":
     if st.button("建立轉換資料", use_container_width=True):
         st.json(order_converter.convert({"source_order": source_order, "target_date": str(target_date or "")}))
 
-else:
+elif feature == "儲值金補價差":
     step("2", "儲值金補價差")
     balance = st.number_input("儲值金餘額", min_value=0, value=0, step=100)
     need = st.number_input("本次服務金額", min_value=0, value=0, step=100)
     if st.button("計算補價差", use_container_width=True):
         diff = stored_value_makeup.calculate(int(balance), int(need))
         st.metric("需補價差", diff)
+
+elif feature == "🔄 服務異動":
+    render_memo_placeholder("🔄 服務異動", "車馬費、異動費、加減時、退款與後台同步。")
+
+elif feature == "📅 排班管理":
+    render_memo_placeholder("📅 排班管理", "排班匯入、檸檬人空檔查詢、清空排班。")
+
+elif feature == "新客資料拆解":
+    step("2", "新客資料拆解")
+    raw_text = st.text_area("貼上新客資料", height=220, placeholder="貼上 LINE / 表單 / 訂單文字")
+    if st.button("拆解資料", use_container_width=True):
+        st.json(new_customer_parser.parse(raw_text))
+
+else:
+    step("2", "舊客快速建單")
+    name = st.text_input("客戶姓名", placeholder="例如：王小明")
+    phone = st.text_input("電話", placeholder="例如：0912345678")
+    address = st.text_input("地址", placeholder="請輸入服務地址")
+    if st.button("建立舊客快速建單資料", use_container_width=True):
+        st.success(old_customer_quick_order.run(name or phone or address or "未輸入"))
 
 st.markdown("---")
 st.caption("service-lemonsystem · unified feature menu")
