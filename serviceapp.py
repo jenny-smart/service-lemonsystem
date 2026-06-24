@@ -54,9 +54,26 @@ hr { border-color:#ececec !important; margin:1.6rem 0 !important; }
 </style>
 """, unsafe_allow_html=True)
 
+MEMO_APP_URL = "https://memo-lemon-system.streamlit.app/"
+
 
 def step(num, title):
     st.markdown(f'<div class="step-pill"><span class="step-num">{num}</span>{title}</div>', unsafe_allow_html=True)
+
+
+def render_memo_placeholder(title, description):
+    step("2", title)
+    st.markdown(
+        f"""
+        <div class="info-strip"><b>{title}</b><ul>
+        <li>{description}</li>
+        <li>此功能會沿用 memo-system 版型，後續逐步搬入 service-lemonsystem。</li>
+        <li>目前先保留入口，不修改 memo-system 原 repo。</li>
+        </ul></div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.link_button("開啟目前 Memo 系統", MEMO_APP_URL, use_container_width=True)
 
 
 st.markdown("""
@@ -64,25 +81,30 @@ st.markdown("""
   <div class="hero-emoji">🍋</div>
   <div>
     <div class="hero-title">檸檬營運自動化工具</div>
-    <div class="hero-sub">快速訂單 5 子程式入口</div>
+    <div class="hero-sub">客服・排班・財務・服務異動・評估・快速訂單</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="info-strip"><b>目前階段</b><ul>
+<li>所有功能放在同一層選單。</li>
 <li>只修改 service-lemonsystem。</li>
 <li>memo-system 與 orders-system 保持不動。</li>
-<li>下一步會把 quick_order_8_3.py 的核心函式逐段搬入新的 orders/ 子模組。</li>
 </ul></div>
 """, unsafe_allow_html=True)
 
-step("1", "選擇快速訂單子程式")
+step("1", "選擇功能")
 feature = st.selectbox(
-    "子程式",
+    "功能",
     [
-        "舊客快速建單",
+        "📋 客服作業",
+        "📅 排班管理",
+        "💰 財務對帳",
+        "🔄 服務異動",
+        "📐 評估文字工具",
         "新客資料拆解",
+        "舊客快速建單",
         "LINE 通知產生器",
         "訂單轉換",
         "儲值金補價差",
@@ -92,7 +114,22 @@ feature = st.selectbox(
 
 st.markdown("---")
 
-if feature == "舊客快速建單":
+if feature == "📋 客服作業":
+    render_memo_placeholder("📋 客服作業", "舊客回購備註回填、新成單提醒建立、客服備忘錄整理。")
+
+elif feature == "📅 排班管理":
+    render_memo_placeholder("📅 排班管理", "排班匯入、檸檬人空檔查詢、清空排班。")
+
+elif feature == "💰 財務對帳":
+    render_memo_placeholder("💰 財務對帳", "待付款清單查詢、ATM 配對、系統對帳更新。")
+
+elif feature == "🔄 服務異動":
+    render_memo_placeholder("🔄 服務異動", "車馬費、異動費、加減時、退款與後台同步。")
+
+elif feature == "📐 評估文字工具":
+    render_memo_placeholder("📐 評估文字工具", "貼入評估內容，自動產生兩版客服文字與金額計算。")
+
+elif feature == "舊客快速建單":
     step("2", "舊客快速建單")
     name = st.text_input("客戶姓名", placeholder="例如：王小明")
     phone = st.text_input("電話", placeholder="例如：0912345678")
@@ -130,4 +167,4 @@ else:
         st.metric("需補價差", diff)
 
 st.markdown("---")
-st.caption("service-lemonsystem · orders subprograms")
+st.caption("service-lemonsystem · unified feature menu")
