@@ -159,7 +159,8 @@ elif feature == "儲值金補價差":
         st.metric("需補價差", diff)
 
 elif feature == "🔄 服務異動":
-    render_memo_placeholder("🔄 服務異動", "車馬費、異動費、加減時、退款與後台同步。")
+    from memo_engine.service_change_page import render as render_service_change
+    render_service_change()
 
 elif feature == "📅 排班管理":
     render_memo_placeholder("📅 排班管理", "排班匯入、檸檬人空檔查詢、清空排班。")
