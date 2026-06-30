@@ -1,34 +1,36 @@
-# KB-000 Platform Inventory
+# KB-000 平台盤點（Platform Inventory）
 
-Status: Draft
-Version: 0.1
+狀態：草稿
+版本：0.1
 
-## Purpose
-Create a single inventory of the Lemon Platform before architecture and migration work begins.
+## 目的
 
-## Repository Inventory
-| Repository | Domain | Status | Strategy |
+在開始整合與重構前，先完整盤點 Lemon Platform 現有資產，作為後續架構設計的依據。
+
+## Repository 盤點
+
+| Repository | 業務領域 | 狀態 | 未來策略 |
 |---|---|---|---|
-| service-lemonsystem | Service | Active | Platform entry point |
-| orders-system | Service | Active | Gradually integrate |
-| memo-system | Operations | Active | Gradually integrate |
-| tool-system | Tools | Active | Integrate as Tool Center |
-| salary-system | Finance | Active | Integrate as Finance Center |
+| service-lemonsystem | Service | 使用中 | 作為平台入口 |
+| orders-system | Service | 使用中 | 逐步整合 |
+| memo-system | Operations | 使用中 | 逐步整合 |
+| tool-system | Tools | 使用中 | 整合為 Tool Center |
+| salary-system | Finance | 使用中 | 整合為 Finance Center |
 
-## Platform Stack
+## 平台技術
 - Streamlit
-- Google Apps Script
+- Google Apps Script（GAS）
 - Google Sheets
 - Google Drive
 - GitHub
 - GitHub Actions
 
-## External Services
+## 外部服務
 - LINE
 - Gmail
 - Google Calendar
 
-## Next Steps
-- KB-001 Repository Inventory
-- KB-002 Feature Inventory
-- KB-003 Shared Components
+## 下一步
+- KB-001 Repository 盤點
+- KB-002 功能盤點
+- KB-003 共用元件盤點
